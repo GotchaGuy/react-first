@@ -8,16 +8,19 @@ function App() {
             id: 1,
             title: 'Learn about blockchain and react',
             isComplete: false,
+            isEditing: false,
         },
         {
             id: 2,
             title: 'Clean room',
             isComplete: true,
+            isEditing: false,
         },
         {
             id: 3,
             title: 'Have dinner',
             isComplete: false,
+            isEditing: false,
         },
 
     ]);
@@ -28,17 +31,18 @@ function App() {
     function addTodo(event) {
         event.preventDefault();
 
-        if(todoInput.trim().length === 0) {
+        if (todoInput.trim().length === 0) {
             return;
         }
 
         setTodos([
             ...todos,
             {
-            id: idForTodo,
-            title: todoInput,
-            isComplete: false,
-        }]);
+                id: idForTodo,
+                title: todoInput,
+                isComplete: false,
+                isEditing: false,
+            }]);
 
 
         setTodoInput('');
@@ -50,9 +54,64 @@ function App() {
         setTodos([...todos].filter(todo => todo.id !== id));
     }
 
+    function changeTodo(id) {
+        const updatedTodos = todos.map(todo => {
+            if (todo.id === id) {
+                todo.isComplete = !todo.isComplete;
+            }
+
+            return todo;
+        })
+
+        setTodos(updatedTodos);
+    }
+
     function handleInput(event) {
         setTodoInput(event.target.value);
     }
+
+    function markAsEditing(id) {
+        const updatedTodos = todos.map(todo => {
+            if (todo.id === id) {
+                todo.isEditing = true;
+            }
+
+            return todo;
+        })
+
+        setTodos(updatedTodos);
+    }
+
+    function updateTodo(event, id) {
+        const updatedTodos = todos.map(todo => {
+            if (todo.id === id) {
+                if (event.target.value.trim().length === 0) {
+                    todo.isEditing = false;
+                    return todo;
+                }
+
+                todo.title = event.target.value;
+                todo.isEditing = false;
+            }
+
+            return todo;
+        })
+
+        setTodos(updatedTodos);
+    }
+
+    function cancelEdit(event, id) {
+        const updatedTodos = todos.map(todo => {
+            if (todo.id === id) {
+                todo.isEditing = false;
+            }
+
+            return todo;
+        })
+
+        setTodos(updatedTodos);
+    }
+
 
     return (
         <div className="container">
@@ -71,9 +130,29 @@ function App() {
                     {todos.map((todo, index) => (
                         <li key={todo.id} className="todo-item-container">
                             <div className="todo-item">
-                                <input type="checkbox"/>
-                                <span className="todo-item-label"> {todo.title} </span>
-                                {/* <input type="text" className="todo-item-input" value="Learn about blockchain and react" /> */}
+                                <input type="checkbox" onChange={() => changeTodo(todo.id)}
+                                       checked={(todo.isComplete) ? true : false}/>
+                                {!todo.isEditing ? (
+                                    <span className={`todo-item-label ${(todo.isComplete) ? 'line-through' : ''}`}
+                                          onDoubleClick={() => markAsEditing(todo.id)}>
+                                    {todo.title}
+                                </span>
+                                ) : (
+                                    <input
+                                        autofocus
+                                        onBlur={(event) => updateTodo(event, todo.id)}
+                                        onKeyDown={(event) => {
+                                            if (event.key == 'Enter') {
+                                                updateTodo(event, todo.id)
+                                            } else if (event.key == 'Escape') {
+                                                cancelEdit(event, todo.id)
+                                            }
+                                        }}
+                                        type="text"
+                                        className="todo-item-input" defaultValue={todo.title}
+                                    />
+                                )}
+
                             </div>
                             <button
                                 onClick={() => deleteTodo(todo.id)}
@@ -95,7 +174,7 @@ function App() {
                             </button>
                         </li>
                     ))}
-                    </ul>
+                </ul>
 
                 <div className="check-all-container">
                     <div>

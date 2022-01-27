@@ -55,7 +55,12 @@ h1 {
   align-items: center;
   font-size: 18px;
   margin-right: 24px;
+  width: 100%;
 }
+
+/*.todo-item span {*/
+/*  */
+/*}*/
 
 .todo-item-input {
   margin-left: 8px;
@@ -72,6 +77,7 @@ h1 {
 
 .todo-item-label {
   margin-left: 16px;
+  width: 100%;
 }
 
 .todo-item-input {
@@ -79,7 +85,7 @@ h1 {
   width: 100%;
   border: none;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  padding: 8px;
+  padding: 6px 8px;
   font-size: 18px;
 }
 
