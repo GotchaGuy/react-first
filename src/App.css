@@ -149,7 +149,15 @@ h1 {
   border-top: 1px solid lightgray;
 }
 
+.no-todos-container {
+  margin: 30px auto;
+  width: 300px;
+}
 
+.no-todos-container p {
+  text-align: center;
+  margin-top: 30px;
+}
 
 
 
