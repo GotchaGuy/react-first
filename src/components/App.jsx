@@ -1,12 +1,14 @@
 import '../reset.css';
 import '../App.css';
-import {useState} from "react";
+import {useEffect, useRef, useState} from "react";
 
 import NoTodos from './NoTodos';
 import TodoForm from './TodoForm';
 import TodoList from './TodoList';
 
 function App() {
+    const [name, setName] = useState('');
+    const nameInputEl = useRef(null);
     const [todos, setTodos] = useState([
         {
             id: 1,
@@ -131,30 +133,53 @@ function App() {
         }
     }
 
+    // built in react hooks: refs, useEffect, useMemo, useState
+    useEffect(() => {
+        nameInputEl.current.focus();
+    }, [])
+    // useEffect(() => {
+    //     console.log('use effect'), [todos]
+    // })
+
     return (
         <div className="container">
             <div className="todo-app">
-                <h1>
+
+                <div className="name-container">
+                    <h2>What is your name?</h2>
+                    {/*<button onClick={() => nameInputEl.current.focus}>Get Ref</button>*/}
+                    <form action="#">
+                        <input type="text" className="todo-input"
+                               placeholder="What is your name?"
+                               value={name}
+                               onChange={(event) => setName(event.target.value)}
+                               ref={nameInputEl}
+                        />
+                    </form>
+                    {name && <p className="name-label">Hello, {name}</p>}
+                </div>
+
+                <h2>
                     Todo App
-                </h1>
+                </h2>
                 <TodoForm addTodo={addTodo}/>
 
-                { todos.length > 0 ? (
-                   <TodoList
-                       todos={todos}
-                       changeTodo={changeTodo}
-                       markAsEditing={markAsEditing}
-                       updateTodo={updateTodo}
-                       cancelEdit={cancelEdit}
-                       deleteTodo={deleteTodo}
-                       remaining={remaining}
-                       clearCompleted={clearCompleted}
-                       completeAllTodos={completeAllTodos}
-                       todosFiltered={todosFiltered}
-                   />
+                {todos.length > 0 ? (
+                    <TodoList
+                        todos={todos}
+                        changeTodo={changeTodo}
+                        markAsEditing={markAsEditing}
+                        updateTodo={updateTodo}
+                        cancelEdit={cancelEdit}
+                        deleteTodo={deleteTodo}
+                        remaining={remaining}
+                        clearCompleted={clearCompleted}
+                        completeAllTodos={completeAllTodos}
+                        todosFiltered={todosFiltered}
+                    />
                 ) : (
                     <NoTodos/>
-                    )}
+                )}
 
             </div>
         </div>
