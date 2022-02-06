@@ -6,32 +6,38 @@ import NoTodos from './NoTodos';
 import TodoForm from './TodoForm';
 import TodoList from './TodoList';
 
+import useLocalStorage from '../hooks/useLocalStorage';
+
+
 function App() {
-    const [name, setName] = useState('');
+    // const [name, setName] = useState('');
+    const [name, setName] = useLocalStorage('name', '');
     const nameInputEl = useRef(null);
-    const [todos, setTodos] = useState([
-        {
-            id: 1,
-            title: 'Learn about blockchain and react',
-            isComplete: false,
-            isEditing: false,
-        },
-        {
-            id: 2,
-            title: 'Clean room',
-            isComplete: true,
-            isEditing: false,
-        },
-        {
-            id: 3,
-            title: 'Have dinner',
-            isComplete: false,
-            isEditing: false,
-        },
+    // const [todos, setTodos] = useState([
+    //     {
+    //         id: 1,
+    //         title: 'Learn about blockchain and react',
+    //         isComplete: false,
+    //         isEditing: false,
+    //     },
+    //     {
+    //         id: 2,
+    //         title: 'Clean room',
+    //         isComplete: true,
+    //         isEditing: false,
+    //     },
+    //     {
+    //         id: 3,
+    //         title: 'Have dinner',
+    //         isComplete: false,
+    //         isEditing: false,
+    //     },
+    //
+    // ]);
+    const [todos, setTodos] = useLocalStorage('todos', []);
 
-    ]);
-
-    const [idForTodo, setIdForTodo] = useState('4');
+    // const [idForTodo, setIdForTodo] = useState('4');
+    const [idForTodo, setIdForTodo] = useLocalStorage('idForTodo','1');
 
     function addTodo(title) {
         setTodos([
@@ -136,10 +142,18 @@ function App() {
     // built in react hooks: refs, useEffect, useMemo, useState
     useEffect(() => {
         nameInputEl.current.focus();
+
+        // setName(JSON.parse(localStorage.getItem('name')) ?? '')
+
     }, [])
     // useEffect(() => {
     //     console.log('use effect'), [todos]
     // })
+
+    function handleNameInput (event) {
+        setName(event.target.value);
+        // localStorage.setItem('name', JSON.stringify(event.target.value))
+    }
 
     return (
         <div className="container">
@@ -152,7 +166,8 @@ function App() {
                         <input type="text" className="todo-input"
                                placeholder="What is your name?"
                                value={name}
-                               onChange={(event) => setName(event.target.value)}
+                               onChange={handleNameInput}
+                               // onChange={(event) => setName(event.target.value)}
                                ref={nameInputEl}
                         />
                     </form>
